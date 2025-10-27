@@ -42,8 +42,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 
-
-
 // ✅ Session setup
 app.use(session({
   secret: process.env.SESSION_SECRET as string,
@@ -67,6 +65,11 @@ app.use(passport.session());
 // ✅ Routes
 app.use("/api", userRoutes);
 app.use("/api", docRouter);
+
+// ✅ Root route — Add this 👇
+app.get("/", (req, res) => {
+  res.send("✅ Backend is live on EC2 and connected to MongoDB!");
+});
 
 // ✅ Start HTTP server (for both Express and Socket.IO)
 httpServer.listen(PORT, () => {
