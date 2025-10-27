@@ -19,7 +19,7 @@ import postComments from '../../controller/user/postcomments';
 import getComment from '../../controller/user/getcomment';
 import getSavedPosts from '../../controller/user/getSavedpost';
 import followingData from '../../controller/user/follow';
-import getAllDoctor from '../../controller/user/getAllDoc';
+import getAllDoctor from '../../controller/user/getallDocDetails';
 import docProfileById from '../../controller/user/docprofile';
 import { getDoctorPosts } from '../../controller/user/getDocPost';
 

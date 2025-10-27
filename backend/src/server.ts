@@ -34,7 +34,7 @@ handleSocketConnection(io);
 
 // ✅ Middlewares
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://athreyam.vercel.app",
   credentials: true,
 }));
 
