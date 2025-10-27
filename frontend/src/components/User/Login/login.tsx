@@ -4,6 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 function Login() {
   const navigate = useNavigate();
 
+  // ✅ Use API URL from .env (fallback for local testing)
+  const API = process.env.REACT_APP_API_URL;
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,13 +21,13 @@ function Login() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/login", {
+      const response = await fetch(`${API}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include", // keep for cookies / sessions
         body: JSON.stringify(trimmedFormData),
-        credentials: "include",
       });
 
       const data = await response.json();
@@ -127,7 +130,7 @@ function Login() {
 
           {/* Google OAuth */}
           <a
-            href="http://localhost:5000/api/auth/google"
+            href={`${API}/api/auth/google`}
             className="w-full py-3 bg-white border border-gray-300 rounded-md text-center hover:bg-gray-200 transition"
           >
             Continue with Google

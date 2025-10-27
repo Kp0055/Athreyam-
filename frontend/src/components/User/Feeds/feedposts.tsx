@@ -6,11 +6,14 @@ function FeedPosts() {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState("");
-  
+
+  // ✅ Use backend URL from .env
+  const API = process.env.REACT_APP_API_URL || "http://16.176.205.231:5000";
+
   useEffect(() => {
     const fetchAllPost = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/users/feed", {
+        const response = await fetch(`${API}/api/users/feed`, {
           method: "GET",
           credentials: "include",
         });
@@ -25,11 +28,11 @@ function FeedPosts() {
     };
 
     fetchAllPost();
-  }, []);
+  }, [API]);
 
   const handleLike = async (postId: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/${postId}/like`, {
+      const response = await fetch(`${API}/api/${postId}/like`, {
         method: "PUT",
         credentials: "include",
       });
@@ -48,7 +51,7 @@ function FeedPosts() {
 
   const handleSavedPost = async (postId: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/${postId}/save`, {
+      const response = await fetch(`${API}/api/${postId}/save`, {
         method: "PUT",
         credentials: "include",
       });
@@ -67,7 +70,7 @@ function FeedPosts() {
     setNewComment("");
 
     try {
-      const response = await fetch(`http://localhost:5000/api/${postId}/comments`, {
+      const response = await fetch(`${API}/api/${postId}/comments`, {
         method: "GET",
         credentials: "include",
       });
@@ -75,8 +78,6 @@ function FeedPosts() {
       if (!response.ok) throw new Error("Failed to fetch comments");
 
       const data = await response.json();
-
-      // ✅ Use `data.comments` directly
       setComments(data.comments || []);
     } catch (error) {
       console.error("Fetch comments error:", error);
@@ -93,7 +94,7 @@ function FeedPosts() {
     if (!newComment.trim()) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/${selectedPostId}/comment`, {
+      const response = await fetch(`${API}/api/${selectedPostId}/comment`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -131,7 +132,7 @@ function FeedPosts() {
           {/* Post Image */}
           {post.image && (
             <img
-              src={`http://localhost:5000/uploads/${post.image}`}
+              src={`${API}/uploads/${post.image}`}
               alt="Post"
               className="w-full rounded-md"
             />

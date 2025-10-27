@@ -1,13 +1,16 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 function DoctorLogin() {
   const navigate = useNavigate();
 
+  // ✅ Use environment variable (set this in .env)
+  const API = process.env.REACT_APP_API_URL;
+
   const [form, setForm] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,34 +30,26 @@ function DoctorLogin() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/doctor/login", {
+      const response = await fetch(`${API}/api/doctor/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // required for cookies/session
+        credentials: "include", // Important for session/cookies
         body: JSON.stringify(trimmedFormData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // If you're using JWT, you can optionally store the token
-        // localStorage.setItem("doctorToken", data.token); // optional
-        toast.success("Login successful!",{
-          duration:3000,
-        });
+        toast.success("Login successful!", { duration: 3000 });
         navigate("/doctor/dashboard");
       } else {
-        toast.error(data.message || "Login failed",{
-          duration:3000
-        });
+        toast.error(data.message || "Login failed", { duration: 3000 });
       }
     } catch (error) {
       console.error("Network error:", error);
-      toast.error("Something went wrong. Please try again.",{
-        duration:3000
-      });
+      toast.error("Something went wrong. Please try again.", { duration: 3000 });
     }
   };
 
@@ -70,9 +65,12 @@ function DoctorLogin() {
         onSubmit={handleSubmit}
         className="bg-white shadow-xl rounded-lg w-full max-w-md p-10"
       >
-        <h1 className="text-3xl mb-8 text-center font-bold text-gray-800">Doctor Login</h1>
+        <h1 className="text-3xl mb-8 text-center font-bold text-gray-800">
+          Doctor Login
+        </h1>
 
         <div className="space-y-6">
+          {/* Email */}
           <div>
             <label className="block text-lg mb-1 text-gray-700">Email</label>
             <input
@@ -86,6 +84,7 @@ function DoctorLogin() {
             />
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-lg mb-1 text-gray-700">Password</label>
             <input
@@ -99,6 +98,7 @@ function DoctorLogin() {
             />
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             className="bg-blue-600 text-white w-full py-3 rounded hover:bg-blue-700 transition"
@@ -106,8 +106,9 @@ function DoctorLogin() {
             Login
           </button>
 
+          {/* Register Redirect */}
           <div className="mt-4 text-gray-600 text-center">
-            Don't have an account?
+            Don’t have an account?
             <Link
               to="/doctor/Register"
               className="text-blue-500 hover:underline ml-1"
@@ -116,8 +117,8 @@ function DoctorLogin() {
             </Link>
           </div>
 
+          {/* Google Login (Optional) */}
           <h1 className="mt-6 text-gray-600 text-center">--- Or Login with ---</h1>
-
           <button
             type="button"
             className="bg-white border w-full py-3 border-black rounded text-gray-700 hover:bg-gray-200 mt-4"

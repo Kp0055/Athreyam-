@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Post from "../Post/post";
 
 interface Comment {
@@ -16,15 +16,17 @@ interface PostType {
   doctorId: string;
   createdAt: string;
   likes: string[];
-  comments?: Comment[]; // added comments array
+  comments?: Comment[];
 }
 
 function Feed() {
+  const API = process.env.REACT_APP_API_URL;
   const [posts, setPosts] = useState<PostType[]>([]);
 
-  const handleFetchPost = async () => {
+  // ✅ useCallback to memoize the fetch function
+  const handleFetchPost = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/doctor/post", {
+      const response = await fetch(`${API}/api/doctor/post`, {
         method: "GET",
         credentials: "include",
       });
@@ -35,14 +37,14 @@ function Feed() {
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
-  };
+  }, [API]);
 
+  // ✅ No warning now — handleFetchPost is stable
   useEffect(() => {
     handleFetchPost();
-  }, []);
+  }, [handleFetchPost]);
 
   const handleLike = (postId: string) => {
-    // Placeholder for like functionality
     console.log("Like clicked on post:", postId);
   };
 
@@ -87,7 +89,7 @@ function Feed() {
               <article>
                 {post.image && (
                   <img
-                    src={`http://localhost:5000/uploads/${post.image}`}
+                    src={`${API}/uploads/${post.image}`}
                     alt="Post content"
                     className="w-full max-h-96 rounded-lg mb-6 object-cover shadow"
                   />
@@ -95,7 +97,9 @@ function Feed() {
                 <h3 className="text-2xl mb-3 text-gray-900 font-semibold">
                   Content Details
                 </h3>
-                <p className="mb-6 text-gray-700 leading-relaxed">{post.content}</p>
+                <p className="mb-6 text-gray-700 leading-relaxed">
+                  {post.content}
+                </p>
 
                 {/* Like Button */}
                 <button
@@ -105,17 +109,26 @@ function Feed() {
                   Like {post.likes?.length || 0}
                 </button>
 
-                {/* Display Comments */}
+                {/* Comments */}
                 {post.comments && post.comments.length > 0 ? (
                   <div className="border-t pt-4">
-                    <h4 className="text-lg font-semibold mb-3 text-gray-800">Comments</h4>
+                    <h4 className="text-lg font-semibold mb-3 text-gray-800">
+                      Comments
+                    </h4>
                     <ul className="space-y-3 max-h-48 overflow-y-auto">
                       {post.comments.map((comment) => (
-                        <li key={comment._id} className="bg-gray-50 p-3 rounded shadow-sm">
-                          <p className="text-sm text-gray-700">{comment.content}</p>
+                        <li
+                          key={comment._id}
+                          className="bg-gray-50 p-3 rounded shadow-sm"
+                        >
+                          <p className="text-sm text-gray-700">
+                            {comment.content}
+                          </p>
                           <div className="mt-1 text-xs text-gray-400 flex justify-between">
                             <span>— {comment.author}</span>
-                            <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                            <span>
+                              {new Date(comment.createdAt).toLocaleDateString()}
+                            </span>
                           </div>
                         </li>
                       ))}
