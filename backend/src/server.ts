@@ -16,60 +16,40 @@ import { handleSocketConnection } from "./socket";
 dotenv.config();
 connectDB();
 
-// Create Express app and HTTP server
 const app = express();
 const PORT = 5000;
 const httpServer = createServer(app);
 
-app.use(cors({
-  origin: [
-    "https://athreyam.vercel.app",
-    "http://localhost:3000" // keep for local testing
-  ],
-  credentials: true,
-}));
-
-
-// ✅ Setup Socket.IO on the HTTP server
-const io = new Server(httpServer, {
-  cors: {
-    origin: [
-      "https://athreyam.vercel.app",
-      "http://localhost:3000"
-    ],
+// ✅ CORS (must come BEFORE any other middleware)
+app.use(
+  cors({
+    origin: ["https://athreyam.vercel.app", "http://localhost:3000"],
     credentials: true,
-  },
-});
+  })
+);
 
-
-// ✅ Socket connection handler
-handleSocketConnection(io);
-
-// ✅ Middlewares
-app.use(cors({
-  origin: "https://athreyam.vercel.app",
-  credentials: true,
-}));
-
+// ✅ JSON & Cookie parsers
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 
 // ✅ Session setup
-app.use(session({
-  secret: process.env.SESSION_SECRET as string,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI as string,
-  }),
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    sameSite: "lax",
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
-  },
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET as string,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI as string,
+    }),
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    },
+  })
+);
 
 // ✅ Passport setup
 app.use(passport.initialize());
@@ -79,12 +59,21 @@ app.use(passport.session());
 app.use("/api", userRoutes);
 app.use("/api", docRouter);
 
-// ✅ Root route — Add this 👇
+// ✅ Socket.IO setup
+const io = new Server(httpServer, {
+  cors: {
+    origin: ["https://athreyam.vercel.app", "http://localhost:3000"],
+    credentials: true,
+  },
+});
+handleSocketConnection(io);
+
+// ✅ Root route
 app.get("/", (req, res) => {
   res.send("✅ Backend is live on EC2 and connected to MongoDB!");
 });
 
-// ✅ Start HTTP server (for both Express and Socket.IO)
+// ✅ Start server
 httpServer.listen(PORT, () => {
   console.log(`✅ Server with Socket.IO running on http://localhost:${PORT}`);
 });
