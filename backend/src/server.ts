@@ -21,59 +21,55 @@ const app = express();
 const PORT = 5000;
 const httpServer = createServer(app);
 
-// ✅ Allowed origins
-const allowedOrigins = [
-  "http://localhost:3000",          // Local React dev
-  "https://athreyam.vercel.app",    // Production Vercel domain
-];
+app.use(cors({
+  origin: [
+    "https://athreyam.vercel.app",
+    "http://localhost:3000" // keep for local testing
+  ],
+  credentials: true,
+}));
 
-// ✅ CORS for Express
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
 
-// ✅ CORS for Socket.IO
+// ✅ Setup Socket.IO on the HTTP server
 const io = new Server(httpServer, {
   cors: {
-    origin: allowedOrigins,
+    origin: [
+      "https://athreyam.vercel.app",
+      "http://localhost:3000"
+    ],
     credentials: true,
   },
 });
+
 
 // ✅ Socket connection handler
 handleSocketConnection(io);
 
 // ✅ Middlewares
+app.use(cors({
+  origin: "https://athreyam.vercel.app",
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 
 // ✅ Session setup
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET as string,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI as string,
-    }),
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
-      sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-    },
-  })
-);
+app.use(session({
+  secret: process.env.SESSION_SECRET as string,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI as string,
+  }),
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  },
+}));
 
 // ✅ Passport setup
 app.use(passport.initialize());
@@ -83,12 +79,12 @@ app.use(passport.session());
 app.use("/api", userRoutes);
 app.use("/api", docRouter);
 
-// ✅ Root route
+// ✅ Root route — Add this 👇
 app.get("/", (req, res) => {
-  res.send("✅ Backend is live and connected to MongoDB!");
+  res.send("✅ Backend is live on EC2 and connected to MongoDB!");
 });
 
-// ✅ Start server
+// ✅ Start HTTP server (for both Express and Socket.IO)
 httpServer.listen(PORT, () => {
-  console.log(`✅ Server with Socket.IO running on port ${PORT}`);
+  console.log(`✅ Server with Socket.IO running on http://localhost:${PORT}`);
 });
