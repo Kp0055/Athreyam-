@@ -18,9 +18,11 @@ const Certification: React.FC = () => {
     credentialUrl: "",
   });
 
+   const API = process.env.REACT_APP_API_URL;
+
   // Load certifications on mount
   useEffect(() => {
-    fetch("http://localhost:5000/api/doctor/certifications", {
+    fetch(`${API}/api/doctor/certifications`, {
       credentials: "include", // Important if using cookies/auth
     })
       .then((res) => res.json())
@@ -40,12 +42,12 @@ const Certification: React.FC = () => {
         console.error("Failed to fetch certifications", err);
         setCertifications([]);
       });
-  }, []);
+  }, [API]);
 
   // Save new certification
   const handleAddCertification = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/doctor/certifications", {
+      const res = await fetch(`${API}/api/doctor/certifications`, {
         method: "POST",
         credentials: "include", // Important for sessions/auth
         headers: {

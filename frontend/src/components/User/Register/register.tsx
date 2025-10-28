@@ -33,12 +33,14 @@ function Register() {
     // Console log form data for checking purpose
     console.log(formData);
 
+     const API = process.env.REACT_APP_API_URL;
+
     
     // Here you can implement the API call to send data to the backend
 
    try{
 
-    const response = await axios.post("http://localhost:5000/api/users/register",formData,{
+    const response = await axios.post(`${API}/api/users/register`,formData,{
       headers: {
         "Content-Type": "application/json"
       }

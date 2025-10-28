@@ -12,6 +12,8 @@ function PasswordChange() {
     confirmPassword: "",
   });
 
+   const API = process.env.REACT_APP_API_URL;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({
@@ -39,7 +41,7 @@ function PasswordChange() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/doctor/changePassword", {
+      const response = await fetch(`${API}/api/doctor/changePassword`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

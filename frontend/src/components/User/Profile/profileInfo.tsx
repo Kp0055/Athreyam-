@@ -19,7 +19,11 @@ function ProfileInfo() {
     dob: "",
   });
 
+  
+
   const profile = useSelector((state: RootState) => state.profile);
+
+  
 
   useEffect(() => {
     dispatch(fetchProfile());

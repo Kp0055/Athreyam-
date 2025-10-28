@@ -20,6 +20,8 @@ const EditProfileForm = () => {
     email: "", // Added: email was missing
   });
 
+   const API = process.env.REACT_APP_API_URL;
+
   // Get doctor data from Redux
   const reduxData = useSelector((state: RootState) => state.doctor);
 
@@ -56,7 +58,7 @@ const EditProfileForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/doctor/profile/update", {
+      const response = await fetch(`${API}/api/doctor/profile/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

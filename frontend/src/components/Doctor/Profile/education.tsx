@@ -18,9 +18,11 @@ const Education: React.FC = () => {
     description: "",
   });
 
+   const API = process.env.REACT_APP_API_URL;
+
   // Load education entries on mount
   useEffect(() => {
-    fetch("http://localhost:5000/api/doctor/education", {
+    fetch(`${API}/api/doctor/education`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -39,12 +41,12 @@ const Education: React.FC = () => {
         console.error("Failed to fetch education", err);
         setEducationList([]);
       });
-  }, []);
+  }, [API]);
 
   // Save new education entry
   const handleAddEducation = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/doctor/education", {
+      const res = await fetch(`${API}/api/doctor/education`, {
         method: "POST",
         credentials: "include",
         headers: {

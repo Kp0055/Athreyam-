@@ -23,12 +23,14 @@ const initialState: docState = {
   imageUrl: "",
 };
 
+ const API = process.env.REACT_APP_API_URL;
+
 // ✅ Fetch Logged-in Doctor Profile
 export const fetchProfile = createAsyncThunk(
   "doctor/fetchProfile",
   async (_, thunkAPI) => {
     try {
-      const res = await fetch("http://localhost:5000/api/Doctor/profile", {
+      const res = await fetch(`${API}/api/Doctor/profile`, {
         credentials: "include",
       });
 
@@ -52,7 +54,7 @@ export const fetchDoctorById = createAsyncThunk(
   "doctor/fetchDoctorById",
   async (id: string, thunkAPI) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/user/getDoctor/${id}`, {
+      const res = await fetch(`${API}/api/user/getDoctor/${id}`, {
         credentials: "include",
       });
 

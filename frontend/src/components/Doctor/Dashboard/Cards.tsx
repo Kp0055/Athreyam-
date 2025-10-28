@@ -10,10 +10,12 @@ function Cards() {
 
   const [loading, setLoading] = useState(true);
 
+   const API = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/doctor/dashboard-counts", {
+        const response = await fetch(`${API}/api/doctor/dashboard-counts`, {
           method: "GET",
           credentials: "include",
         });
@@ -27,7 +29,7 @@ function Cards() {
     };
 
     fetchData();
-  }, []);
+  }, [API]);
 
   const cardData = [
     {

@@ -6,6 +6,8 @@ function Post() {
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
+   const API = process.env.REACT_APP_API_URL;
+
   const handleFeedPost = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -22,7 +24,7 @@ function Post() {
       formData.append("content", text);
       if (image) formData.append("image", image);
 
-      const response = await fetch("http://localhost:5000/api/doctor/createPost", {
+      const response = await fetch(`${API}/api/doctor/createPost`, {
         method: "POST",
         body: formData,
         credentials: "include",

@@ -30,10 +30,12 @@ function AppointmentList() {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [filter, setFilter] = useState<string>("");
 
+   const API = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const doctorAppointmentList = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/doctor/appoimentlist", {
+        const response = await fetch(`${API}/api/doctor/appoimentlist`, {
           method: "GET",
           credentials: "include",
         });
@@ -68,7 +70,7 @@ function AppointmentList() {
     };
 
     doctorAppointmentList();
-  }, []);
+  }, [API]);
 
   const filteredList = filter
     ? list.filter((appointment) => appointment.status === filter)

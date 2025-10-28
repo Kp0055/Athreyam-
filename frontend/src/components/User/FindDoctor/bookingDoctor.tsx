@@ -44,6 +44,8 @@ const BookingModal: React.FC<BookingModalProps> = ({
     fee: 0,
   });
 
+   const API = process.env.REACT_APP_API_URL;
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -81,7 +83,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
 
     try {
       const datas: RazorpayOrderResponse = await axios.post(
-        "http://localhost:5000/api/users/payment/create-order",
+        `${API}/api/users/payment/create-order`,
         { amount: formData.fee },
         { withCredentials: true }
       );
@@ -96,7 +98,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
         handler: async function (response: any) {
           try {
             await axios.post(
-              "http://localhost:5000/api/users/payment/verify-payment",
+              `${API}/api/users/payment/verify-payment`,
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

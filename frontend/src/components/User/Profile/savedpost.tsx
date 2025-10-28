@@ -13,10 +13,12 @@ function SavedPosts() {
   const [savedPosts, setSavedPosts] = useState<SavedPost[]>([]);
   const [loading, setLoading] = useState(true);
 
+   const API = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchSavedPosts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/user/saved-posts", {
+        const response = await fetch(`${API}/api/user/saved-posts`, {
           method: "GET",
           credentials: "include",
         });
@@ -33,7 +35,7 @@ function SavedPosts() {
     };
 
     fetchSavedPosts();
-  }, []);
+  }, [API]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100  p-4 sm:p-8">
@@ -54,7 +56,7 @@ function SavedPosts() {
             >
               {post.image && (
                 <img
-                  src={`http://localhost:5000/uploads/${post.image}`}
+                  src={`${API}/uploads/${post.image}`}
                   alt="Post"
                   className="w-full h-48 object-cover"
                 />

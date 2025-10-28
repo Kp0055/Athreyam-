@@ -20,6 +20,8 @@ function DoctorProfile() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+   const API = process.env.REACT_APP_API_URL;
+
 
   useEffect(() => {
     dispatch(fetchProfile());
@@ -56,7 +58,7 @@ function DoctorProfile() {
     try {
 
 
-      const res = await fetch("http://localhost:5000/api/doctor/profile-image", {
+      const res = await fetch(`${API}/api/doctor/profile-image`, {
         method: "POST",
         credentials:'include',
         body: formData,  

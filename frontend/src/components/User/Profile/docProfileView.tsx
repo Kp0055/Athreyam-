@@ -13,6 +13,8 @@ interface Post {
   caption: string;
 }
 
+ const API = process.env.REACT_APP_API_URL;
+
 const ProfileView = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
@@ -38,7 +40,7 @@ const ProfileView = () => {
     try {
       setLoadingPosts(true);
       const res = await fetch(
-        `http://localhost:5000/api/user/doctorPosts/${doctorId}`,
+        `${API}/api/user/doctorPosts/${doctorId}`,
         {
           credentials: "include",
         }
@@ -78,13 +80,13 @@ const ProfileView = () => {
       {/* ===== Cover Section ===== */}
       <div className="relative">
         <img
-          src={`http://localhost:5000/uploads/${doctor.imageUrl}`}
+          src={`${API}/uploads/${doctor.imageUrl}`}
           alt="Cover"
           className="w-full h-52 object-cover"
         />
         <div className="absolute left-1/2 -bottom-12 transform -translate-x-1/2 md:left-12 md:translate-x-0 md:bottom-4">
           <img
-            src={`http://localhost:5000/uploads/${doctor.imageUrl}`}
+            src={`${API}/uploads/${doctor.imageUrl}`}
             alt="Profile"
             className="w-28 h-28 rounded-full border-4 border-white object-cover shadow-lg"
           />
@@ -132,7 +134,7 @@ const ProfileView = () => {
                 className="relative group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
               >
                 <img
-                  src={`http://localhost:5000/uploads/${post.image}`}
+                  src={`${API}/uploads/${post.image}`}
                   alt={post.caption}
                   className="w-full h-52 object-cover group-hover:opacity-90"
                 />

@@ -19,11 +19,13 @@ interface Transaction {
 const PaymentTransaction = () => {
   const [paymentTransactions, setPaymentTransactions] = useState<Transaction[]>([]);
 
+   const API = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/doctor/paymentTranscation",
+          `${API}/api/doctor/paymentTranscation`,
           {
             method: "GET",
             credentials: "include",
@@ -60,7 +62,7 @@ const PaymentTransaction = () => {
     };
 
     fetchTransactions();
-  }, []);
+  }, [API]);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {

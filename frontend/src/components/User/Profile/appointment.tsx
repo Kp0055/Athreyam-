@@ -13,6 +13,8 @@ interface AppointmentType {
   };
 }
 
+ const API = process.env.REACT_APP_API_URL;
+
 function Appointment() {
   const [appointments, setAppointments] = useState<AppointmentType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,7 @@ function Appointment() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/appoiment", {
+        const res = await fetch(`${API}/api/users/appoiment`, {
           method: "GET",
           credentials: "include",
         });
@@ -43,7 +45,7 @@ function Appointment() {
   // Cancel booking
   const handleCancel = async (bookingId: string) => {
     try {
-      const res = await fetch("http://localhost:5000/api/users/cancel", {
+      const res = await fetch(`${API}/api/users/cancel`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

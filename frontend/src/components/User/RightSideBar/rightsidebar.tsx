@@ -14,10 +14,12 @@ function Sidebar() {
   const [datavalue, setDataValue] = useState<Doctor[]>([]);
   const navigate = useNavigate();
 
+   const API = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/user/getAllDoctor", {
+        const res = await fetch(`${API}/api/user/getAllDoctor`, {
           method: "GET",
           credentials: "include",
         });
@@ -30,7 +32,7 @@ function Sidebar() {
     };
 
     fetchDoctors();
-  }, []);
+  }, [API]);
 
   const handleProfile = (id?: string) => {
     if (id) {

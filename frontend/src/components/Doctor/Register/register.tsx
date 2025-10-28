@@ -13,6 +13,9 @@ function Register() {
   });
 
 
+   const API = process.env.REACT_APP_API_URL;
+
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -23,7 +26,7 @@ function Register() {
   const handleRegister = async()=>{
     try{
 
-      const response = await axios.post("http://localhost:5000/api/Doctor/Register",formData)
+      const response = await axios.post(`${API}/api/Doctor/Register`,formData)
       if(response.status === 200){
         alert('done to backend')
       }else{

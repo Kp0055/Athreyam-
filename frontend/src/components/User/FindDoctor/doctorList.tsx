@@ -11,11 +11,13 @@ function AllDoctorList({ doctors }: Props) {
   const [currentUserFollowing, setCurrentUserFollowing] = useState<string[]>([]); // IDs user is following
   const [loadingFollow, setLoadingFollow] = useState<string | null>(null); // To disable buttons while toggling
 
+   const API = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     // Fetch current user following list
     const fetchCurrentUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/me", {
+        const res = await fetch(`${API}/api/users/me`, {
           method: "GET",
           credentials: "include",
         });
@@ -32,7 +34,7 @@ function AllDoctorList({ doctors }: Props) {
     if (doctors.length === 0) {
       const fetchData = async () => {
         try {
-          const res = await fetch("http://localhost:5000/api/users/findDoctor", {
+          const res = await fetch(`${API}/api/users/findDoctor`, {
             method: "GET",
             credentials: "include",
           });
@@ -48,7 +50,7 @@ function AllDoctorList({ doctors }: Props) {
 
       fetchData();
     }
-  }, [doctors]);
+  }, [doctors, API]);
 
   const doctorsToDisplay = doctors.length > 0 ? doctors : doctorList;
 
@@ -56,7 +58,7 @@ function AllDoctorList({ doctors }: Props) {
     setLoadingFollow(doctorId);
     try {
       // Toggle follow/unfollow
-      const res = await fetch(`http://localhost:5000/api/users/follow/${doctorId}`, {
+      const res = await fetch(`${API}/api/users/follow/${doctorId}`, {
         method: "POST",
         credentials: "include",
       });
@@ -87,7 +89,7 @@ function AllDoctorList({ doctors }: Props) {
           {/* Profile Image and Follow */}
           <div className="w-full md:w-1/3 flex flex-col items-center justify-center">
             <img
-              src={doctor.imageUrl ? `http://localhost:5000/${doctor.imageUrl}` : "https://via.placeholder.com/150"}
+              src={doctor.imageUrl ? `${API}/${doctor.imageUrl}` : "https://via.placeholder.com/150"}
               alt="Doctor Profile"
               className="h-28 rounded-full"
             />

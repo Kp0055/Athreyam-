@@ -6,8 +6,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
+   const API = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
-    fetch("http://localhost:5000/api/doctor/verify-token", {
+    fetch(`${API}/api/doctor/verify-token`, {
       credentials: "include",
     })
       .then((res) => {
@@ -16,7 +18,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       })
       .catch(() => setAuthenticated(false))
       .finally(() => setLoading(false));
-  }, []);
+  }, [API]);
 
   if (loading) return <div><Loader/></div>;
   if (!authenticated) return <Navigate to="/doctor/login" replace />;

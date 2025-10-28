@@ -9,6 +9,8 @@ const Navbar = () => {
   const [nav, setNav] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+   const API = process.env.REACT_APP_API_URL;
+
   // Check login status on mount
   useEffect(() => {
     const token =
@@ -20,7 +22,7 @@ const Navbar = () => {
   const handleNav = () => setNav(!nav);
 
   const handleLogout = async () => {
-    await fetch("http://localhost:5000/api/users/logout", {
+    await fetch(`${API}/api/users/logout`, {
       method: "POST",
       credentials: "include",
     });

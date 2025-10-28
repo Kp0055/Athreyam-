@@ -16,12 +16,14 @@ const initialState: User = {
 
 };
 
+ const API = process.env.REACT_APP_API_URL;
+
 //  Fetch profile from backend
 export const fetchProfile = createAsyncThunk(
   "profile/fetchProfile",
   async (_, thunkAPI) => {
     try {
-      const res = await fetch("http://localhost:5000/api/users/profile/info/details", {
+      const res = await fetch(`${API}/api/users/profile/info/details`, {
         credentials: "include",
       });
 
@@ -43,7 +45,7 @@ export const updateProfile = createAsyncThunk(
   "profile/updateProfile",
   async (updatedData: Partial<User>, thunkAPI) => {
     try {
-      const res = await fetch("http://localhost:5000/api/user/profile/info/Edit", {
+      const res = await fetch(`${API}/api/user/profile/info/Edit`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -28,6 +28,8 @@ export default function MultiFilter({ onFilter }: Props) {
   const consultation = ["Video", "Chat", "Clinic"];
   const languages = ["English", "Spanish", "French", "Malayalam", "Hindi", "Tamil"];
 
+   const API = process.env.REACT_APP_API_URL;
+
   // Toggle helper for checkbox selection
   const toggleOption = (
     value: string,
@@ -65,7 +67,7 @@ export default function MultiFilter({ onFilter }: Props) {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/filters", {
+      const response = await fetch(`${API}/api/users/filters`, {
         method: "POST",
         credentials: "include",
         headers: {

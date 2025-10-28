@@ -4,11 +4,12 @@ import { Navigate } from "react-router-dom";
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+   const API = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/verify-token", {
+        const res = await fetch(`${API}/api/users/verify-token`, {
           credentials: "include", // important if using HttpOnly cookies
         });
         if (res.ok) {
@@ -22,7 +23,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     };
 
     checkAuth();
-  }, []);
+  }, [API]);
 
   if (loading) return <div>Loading...</div>;
 

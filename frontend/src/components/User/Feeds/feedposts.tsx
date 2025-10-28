@@ -8,7 +8,7 @@ function FeedPosts() {
   const [newComment, setNewComment] = useState("");
 
   // ✅ Use backend URL from .env
-  const API = process.env.REACT_APP_API_URL || "http://16.176.205.231:5000";
+  const API = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchAllPost = async () => {

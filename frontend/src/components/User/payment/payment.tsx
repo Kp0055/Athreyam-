@@ -16,10 +16,12 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+     const API = process.env.REACT_APP_API_URL;
+
     if (!stripe || !elements) return;
 
     // Create PaymentIntent on backend
-    const res = await fetch('http://localhost:5000/api/users/create-payment-intent', {
+    const res = await fetch(`${API}/api/users/create-payment-intent`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount: amount * 100 }), // convert to smallest currency unit
