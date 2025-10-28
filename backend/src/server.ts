@@ -21,10 +21,30 @@ const app = express();
 const PORT = 5000;
 const httpServer = createServer(app);
 
-// ✅ Setup Socket.IO on the HTTP server
+// ✅ Allowed origins
+const allowedOrigins = [
+  "http://localhost:3000",          // Local React dev
+  "https://athreyam.vercel.app",    // Production Vercel domain
+];
+
+// ✅ CORS for Express
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+// ✅ CORS for Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000", // Frontend URL
+    origin: allowedOrigins,
     credentials: true,
   },
 });
@@ -33,30 +53,27 @@ const io = new Server(httpServer, {
 handleSocketConnection(io);
 
 // ✅ Middlewares
-app.use(cors({
-  origin: "https://athreyam.vercel.app",
-  credentials: true,
-}));
-
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 
 // ✅ Session setup
-app.use(session({
-  secret: process.env.SESSION_SECRET as string,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI as string,
-  }),
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    sameSite: "lax",
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
-  },
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET as string,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI as string,
+    }),
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    },
+  })
+);
 
 // ✅ Passport setup
 app.use(passport.initialize());
@@ -66,12 +83,12 @@ app.use(passport.session());
 app.use("/api", userRoutes);
 app.use("/api", docRouter);
 
-// ✅ Root route — Add this 👇
+// ✅ Root route
 app.get("/", (req, res) => {
-  res.send("✅ Backend is live on EC2 and connected to MongoDB!");
+  res.send("✅ Backend is live and connected to MongoDB!");
 });
 
-// ✅ Start HTTP server (for both Express and Socket.IO)
+// ✅ Start server
 httpServer.listen(PORT, () => {
-  console.log(`✅ Server with Socket.IO running on http://localhost:${PORT}`);
+  console.log(`✅ Server with Socket.IO running on port ${PORT}`);
 });
