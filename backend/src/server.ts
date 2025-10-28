@@ -21,12 +21,12 @@ const PORT = 5000;
 const httpServer = createServer(app);
 
 // ✅ CORS (must come BEFORE any other middleware)
-app.use(
-  cors({
-    origin: ["https://api.athreyam.shop", "http://localhost:3000"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: "https://www.athreyam.shop",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 
 // ✅ JSON & Cookie parsers
 app.use(express.json());
