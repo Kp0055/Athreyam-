@@ -23,7 +23,7 @@ const httpServer = createServer(app);
 // ✅ CORS (must come BEFORE any other middleware)
 app.use(
   cors({
-    origin: ["https://athreyam.vercel.app", "http://localhost:3000"],
+    origin: ["https://api.athreyam.shop", "http://localhost:3000"],
     credentials: true,
   })
 );
@@ -62,7 +62,7 @@ app.use("/api", docRouter);
 // ✅ Socket.IO setup
 const io = new Server(httpServer, {
   cors: {
-    origin: ["https://athreyam.vercel.app", "http://localhost:3000"],
+    origin: ["https://api.athreyam.shop", "http://localhost:3000"],
     credentials: true,
   },
 });
