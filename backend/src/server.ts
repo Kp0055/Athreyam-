@@ -20,27 +20,23 @@ const app = express();
 const PORT = 5000;
 const httpServer = createServer(app);
 
-// ✅ CORS (must come BEFORE any other middleware)
+// ✅ CORS (must be before all routes)
 app.use(
   cors({
     origin: [
-      "https://api.athreyam.shop",  // backend API
-      "https://athreyam.vercel.app",  // If you want to allow Vercel as well
-      "https://athreyam.shop",         // The non-www version
-      "https://www.athreyam.shop",     // The www version
-      "http://localhost:3000"          // If you're testing locally
+      "https://athreyam.vercel.app",
+      "https://athreyam.shop",
+      "https://www.athreyam.shop",
+      "http://localhost:3000",
     ],
-    credentials: true, // If you're using cookies or sessions
+    credentials: true,
   })
 );
 
-
-// ✅ JSON & Cookie parsers
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 
-// ✅ Session setup
 app.use(
   session({
     secret: process.env.SESSION_SECRET as string,
@@ -53,12 +49,11 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 24 * 60 * 60 * 1000,
     },
   })
 );
 
-// ✅ Passport setup
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -66,21 +61,21 @@ app.use(passport.session());
 app.use("/api", userRoutes);
 app.use("/api", docRouter);
 
-// ✅ Socket.IO setup
+// ✅ Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: ["https://api.athreyam.shop", "http://localhost:3000"],
+    origin: ["https://athreyam.vercel.app", "http://localhost:3000"],
     credentials: true,
   },
 });
 handleSocketConnection(io);
 
-// ✅ Root route
+// ✅ Root
 app.get("/", (req, res) => {
   res.send("✅ Backend is live on EC2 and connected to MongoDB!");
 });
 
-// ✅ Start server
+// ✅ Start
 httpServer.listen(PORT, () => {
   console.log(`✅ Server with Socket.IO running on http://localhost:${PORT}`);
 });
