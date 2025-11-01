@@ -24,7 +24,7 @@ const httpServer = createServer(app);
 app.use(
   cors({
     origin: [
-      "https://api.athreyam.shop ",  // think this is the backend
+      "https://api.athreyam.shop",  // backend API
       "https://athreyam.vercel.app",  // If you want to allow Vercel as well
       "https://athreyam.shop",         // The non-www version
       "https://www.athreyam.shop",     // The www version
