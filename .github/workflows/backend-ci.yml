@@ -1,0 +1,57 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install dependencies
+      working-directory: ./backend
+      run: npm ci
+
+    - name: Check TypeScript compilation
+      working-directory: ./backend
+      run: npm run build
+
+    - name: Run linter (if configured)
+      working-directory: ./backend
+      run: npm run lint --if-present
+      continue-on-error: true
+
+    - name: Run tests (if configured)
+      working-directory: ./backend
+      run: npm test --if-present
+      continue-on-error: true
+
+    - name: Upload build artifacts
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-build-${{ matrix.node-version }}
+        path: backend/dist/
+        retention-days: 7
